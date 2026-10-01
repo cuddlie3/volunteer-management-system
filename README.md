@@ -13,6 +13,6 @@
 
 ## Структура проекта
 
-- `docs/interview.md` — протокол интервью
-- `docs/requirements.md` — требования к системе
-- `docs/technical-specification.md` — техническое задание
+- [Протокол интервью](docs/interview.md)
+- [Требования к системе](docs/requirements.md)
+- [Техническое задание](docs/technical-specification.md)
