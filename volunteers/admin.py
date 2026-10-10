@@ -81,23 +81,38 @@ class VolunteerApplicationAdmin(admin.ModelAdmin):
         }),
     )
 
+    
     def save_model(self, request, obj, form, change):
-        if obj.status == VolunteerApplication.STATUS_APPROVED:
-            existing_volunteer = Volunteer.objects.filter(
-                telegram_id=obj.telegram_id
-            ).first() if obj.telegram_id is not None else None
+        super().save_model(request, obj, form, change)
 
-            if existing_volunteer is None:
-                Volunteer.objects.create(
-                    full_name=obj.full_name,
-                    full_name_en=obj.full_name_en,
-                    phone=obj.phone,
-                    telegram_id=obj.telegram_id,
-                    study_place=obj.study_place,
-                    address=obj.address,
-                    languages=obj.languages,
-                    emergency_contact=obj.emergency_contact,
-                    id_document_file_id=obj.id_document_file_id,
-                )
+        if obj.status != VolunteerApplication.STATUS_APPROVED:
+            return
+
+        if obj.telegram_id is not None:
+            Volunteer.objects.get_or_create(
+                telegram_id=obj.telegram_id,
+                defaults={
+                    "full_name": obj.full_name,
+                    "full_name_en": obj.full_name_en,
+                    "phone": obj.phone,
+                    "study_place": obj.study_place,
+                    "address": obj.address,
+                    "languages": obj.languages,
+                    "emergency_contact": obj.emergency_contact,
+                    "id_document_file_id": obj.id_document_file_id,
+                },
+            )
+        else:
+            Volunteer.objects.create(
+                full_name=obj.full_name,
+                full_name_en=obj.full_name_en,
+                phone=obj.phone,
+                study_place=obj.study_place,
+                address=obj.address,
+                languages=obj.languages,
+                emergency_contact=obj.emergency_contact,
+                id_document_file_id=obj.id_document_file_id,
+            )
+
 
         super().save_model(request, obj, form, change)

@@ -8,8 +8,8 @@ django.setup()
 
 from dotenv import load_dotenv
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
-from volunteers.models import Volunteer
-
+from asgiref.sync import sync_to_async
+from volunteers.models import VolunteerApplication
 from telegram.ext import (
     Application,
     CommandHandler,
@@ -174,25 +174,35 @@ async def get_languages(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 # Экстренный контакт
+
 async def get_emergency(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     context.user_data["emergency"] = update.message.text
-
     data = context.user_data
 
-    await update.message.reply_text(
-        "✅ Регистрация завершена!\n\n"
-        f"👤 ФИО: {data['full_name']}\n"
-        f"🌐 ФИО на английском: {data['full_name_en']}\n"
-        f"📱 Телефон: {data['phone']}\n"
-        f"🎓 Учёба: {data['study_place']}\n"
-        f"🏠 Адрес: {data['address']}\n"
-        f"🌐 Языки: {data['languages']}\n"
-        f"🚨 Экстренный контакт: {data['emergency']}\n\n"
-        "Спасибо за регистрацию! ❤️"
+    await sync_to_async(VolunteerApplication.objects.create)(
+        full_name=data["full_name"],
+        full_name_en=data["full_name_en"],
+        phone=data["phone"],
+        telegram_id=update.effective_user.id,
+        study_place=data["study_place"],
+        address=data["address"],
+        languages=data["languages"],
+        emergency_contact=data["emergency"],
+        id_document_file_id=data["id_document"],
+        status=VolunteerApplication.STATUS_PENDING,
     )
 
+    await update.message.reply_text(
+        "✅ Ваша заявка успешно отправлена!\n\n"
+        f"👤 ФИО: {data['full_name']}\n"
+        f"🎓 Место учёбы: {data['study_place']}\n\n"
+        "📋 Статус: ожидает подтверждения координатором.\n"
+        "Спасибо за интерес к Volio! ❤️"
+    )
+
+    context.user_data.clear()
     return ConversationHandler.END
+
 
 
 # Отмена регистрации
