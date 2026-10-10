@@ -1,7 +1,15 @@
+
 import os
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+
+import django
+django.setup()
+
 from dotenv import load_dotenv
-from telegram import Update, ReplyKeyboardMarkup
+from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
+from volunteers.models import Volunteer
+
 from telegram.ext import (
     Application,
     CommandHandler,
