@@ -1,0 +1,205 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Заявки</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'volunteers/css/style.css' %}"
+    >
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+    <header class="page-header">
+
+        <button
+            class="back-button"
+            onclick="goBack()"
+        >
+            ←
+        </button>
+
+        <div>
+
+            <p class="small-text">
+                Volunteer Management
+            </p>
+
+            <h1>
+                Заявки
+            </h1>
+
+        </div>
+
+    </header>
+
+
+    <section class="applications">
+
+        {% if applications %}
+
+            {% for application in applications %}
+
+                <div class="application-card">
+
+                    <div class="application-top">
+
+                        <div class="application-avatar">
+                            👤
+                        </div>
+
+                        <div class="application-info">
+
+                            <h3>
+                                {{ application.full_name }}
+                            </h3>
+
+                            <p>
+                                {{ application.study_place }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="application-details">
+
+                        <div>
+                            <span>📱</span>
+
+                            <span>
+                                {{ application.phone }}
+                            </span>
+                        </div>
+
+
+                        <div>
+                            <span>🌐</span>
+
+                            <span>
+                                {{ application.languages }}
+                            </span>
+                        </div>
+
+
+                        <div>
+                            <span>📅</span>
+
+                            <span>
+                                {{ application.created_at|date:"d.m.Y H:i" }}
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="status">
+
+                        {% if application.status == "pending" %}
+
+                            <span class="status pending">
+                                🟡 Новая
+                            </span>
+
+                        {% elif application.status == "approved" %}
+
+                            <span class="status approved">
+                                🟢 Одобрена
+                            </span>
+
+                        {% elif application.status == "rejected" %}
+
+                            <span class="status rejected">
+                                🔴 Отклонена
+                            </span>
+
+                        {% else %}
+
+                            <span class="status">
+                                {{ application.status }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <a
+    class="details-button"
+    href="/mini-app/applications/{{ application.id }}/"
+>
+    Открыть заявку →
+</a>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    📋
+                </div>
+
+                <h2>
+                    Заявок пока нет
+                </h2>
+
+                <p>
+                    Новые заявки волонтёров
+                    появятся здесь.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+</div>
+
+
+<script>
+
+const tg = window.Telegram.WebApp;
+
+tg.ready();
+tg.expand();
+
+
+function goBack() {
+
+    window.location.href = "/mini-app/";
+
+}
+
+
+
+
+</script>
+
+</body>
+
+</html>

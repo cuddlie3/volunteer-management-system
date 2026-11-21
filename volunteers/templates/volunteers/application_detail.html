@@ -1,0 +1,203 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Заявка</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'volunteers/css/style.css' %}"
+    >
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+    <header class="page-header">
+
+        <button
+            class="back-button"
+            onclick="goBack()"
+        >
+            ←
+        </button>
+
+        <div>
+
+            <p class="small-text">
+                Volunteer Management
+            </p>
+
+            <h1>
+                Заявка
+            </h1>
+
+        </div>
+
+    </header>
+
+
+    <section class="detail-card">
+
+        <div class="detail-avatar">
+            👤
+        </div>
+
+        <h2>
+            {{ application.full_name }}
+        </h2>
+
+        <span class="detail-status
+            {% if application.status == 'pending' %}
+                pending
+            {% elif application.status == 'approved' %}
+                approved
+            {% elif application.status == 'rejected' %}
+                rejected
+            {% endif %}
+        ">
+
+            {% if application.status == "pending" %}
+                🟡 Новая
+            {% elif application.status == "approved" %}
+                🟢 Одобрена
+            {% elif application.status == "rejected" %}
+                🔴 Отклонена
+            {% endif %}
+
+        </span>
+
+    </section>
+
+
+    <section class="info-card">
+
+        <h3>Личные данные</h3>
+
+        <div class="info-row">
+            <span>ФИО</span>
+            <strong>{{ application.full_name }}</strong>
+        </div>
+
+        <div class="info-row">
+            <span>ФИО на английском</span>
+            <strong>{{ application.full_name_en }}</strong>
+        </div>
+
+        <div class="info-row">
+            <span>Телефон</span>
+            <strong>{{ application.phone }}</strong>
+        </div>
+
+        <div class="info-row">
+            <span>Место учёбы</span>
+            <strong>{{ application.study_place }}</strong>
+        </div>
+
+        <div class="info-row">
+            <span>Адрес</span>
+            <strong>{{ application.address }}</strong>
+        </div>
+
+        <div class="info-row">
+            <span>Языки</span>
+            <strong>{{ application.languages }}</strong>
+        </div>
+
+    </section>
+
+
+    <section class="info-card">
+
+        <h3>Экстренный контакт</h3>
+
+        <div class="info-row">
+            <span>Контакт</span>
+            <strong>
+                {{ application.emergency_contact }}
+            </strong>
+        </div>
+
+    </section>
+
+
+    {% if application.status == "pending" %}
+
+        <section class="actions">
+
+            <form
+                method="post"
+                action="/mini-app/applications/{{ application.id }}/approve/"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    class="action-button approve"
+                    type="submit"
+                >
+                    ✅ Одобрить заявку
+                </button>
+
+            </form>
+
+
+            <form
+                method="post"
+                action="/mini-app/applications/{{ application.id }}/reject/"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    class="action-button reject"
+                    type="submit"
+                >
+                    ❌ Отклонить заявку
+                </button>
+
+            </form>
+
+        </section>
+
+    {% endif %}
+
+
+</div>
+
+
+<script>
+
+const tg = window.Telegram.WebApp;
+
+tg.ready();
+tg.expand();
+
+
+function goBack() {
+
+    window.location.href =
+        "/mini-app/applications/";
+
+}
+
+</script>
+
+</body>
+
+</html>

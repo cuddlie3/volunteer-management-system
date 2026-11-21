@@ -1,0 +1,188 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    >
+
+    <title>Создать смену</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'volunteers/css/style.css' %}"
+    >
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+    <header class="page-header">
+
+        <button
+            class="back-button"
+            onclick="goBack()"
+        >
+            ←
+        </button>
+
+        <div>
+
+            <p class="small-text">
+                Volunteer Management
+            </p>
+
+            <h1>
+                Новая смена
+            </h1>
+
+        </div>
+
+    </header>
+
+
+    <div class="info-card">
+
+        <form method="post">
+
+            {% csrf_token %}
+
+
+            <div class="form-group">
+
+                <label for="name">
+                    Название смены
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Например: Утренняя смена"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="zone">
+                    Зона
+                </label>
+
+                <select
+                    id="zone"
+                    name="zone"
+                    required
+                >
+
+                    <option value="">
+                        Выберите зону
+                    </option>
+
+                    {% for zone in zones %}
+
+                    <option value="{{ zone.id }}">
+                        {{ zone.name }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="start_time">
+                    Начало смены
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="start_time"
+                    name="start_time"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="end_time">
+                    Окончание смены
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="end_time"
+                    name="end_time"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="description">
+                    Описание
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="4"
+                    placeholder="Дополнительная информация о смене"
+                ></textarea>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="details-button"
+            >
+                Создать смену
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const tg = window.Telegram.WebApp;
+
+tg.ready();
+tg.expand();
+
+
+function goBack() {
+
+    window.location.href = "/mini-app/shifts/";
+
+}
+
+</script>
+
+</body>
+
+</html>

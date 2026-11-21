@@ -1,0 +1,444 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0,
+                   maximum-scale=1.0,
+                   user-scalable=no">
+
+    <title>Volunteer Management</title>
+
+    <link rel="stylesheet"
+          href="{% static 'volunteers/css/style.css' %}">
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+    <header class="header">
+
+        <div>
+            <p class="small-text">
+                Volunteer Management
+            </p>
+
+            <h1>
+                Добро пожаловать 👋
+            </h1>
+        </div>
+
+        <div class="avatar">
+            👤
+        </div>
+
+    </header>
+
+
+    <!-- PROFILE -->
+    <section class="profile-card">
+
+        <div class="profile-icon">
+            👤
+        </div>
+
+        <div>
+            <p class="profile-name">
+                Координатор
+            </p>
+
+            <p class="profile-role">
+                Volunteer Management
+            </p>
+        </div>
+
+    </section>
+
+
+    <!-- STATISTICS -->
+    <section class="stats">
+
+        <div class="stat-card">
+            <span class="stat-icon">👥</span>
+
+            <div>
+                <p class="stat-number">
+                    {{ volunteers_count }}
+                </p>
+
+                <p class="stat-title">
+                    Волонтёры
+                </p>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <span class="stat-icon">📋</span>
+
+            <div>
+                <p class="stat-number">
+                    {{ applications_count }}
+                </p>
+
+                <p class="stat-title">
+                    Заявки
+                </p>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <span class="stat-icon">🗓</span>
+
+            <div>
+                <p class="stat-number">
+                    {{ shifts_count }}
+                </p>
+
+                <p class="stat-title">
+                    Смены
+                </p>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <span class="stat-icon">📍</span>
+
+            <div>
+                <p class="stat-number">
+                    {{ zones_count }}
+                </p>
+
+                <p class="stat-title">
+                    Зоны
+                </p>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <span class="stat-icon">📝</span>
+
+            <div>
+                <p class="stat-number">
+                    {{ assignments_count }}
+                </p>
+
+                <p class="stat-title">
+                    Назначения
+                </p>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <span class="stat-icon">✅</span>
+
+            <div>
+                <p class="stat-number">
+                    {{ attended_count }}
+                </p>
+
+                <p class="stat-title">
+                    Присутствовали
+                </p>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <span class="stat-icon">⏱</span>
+
+            <div>
+                <p class="stat-number">
+                    {{ total_hours }} ч
+                </p>
+
+                <p class="stat-title">
+                    {{ total_minutes }} мин работы
+                </p>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- MENU -->
+    <section class="menu">
+
+        <h2>
+            Управление
+        </h2>
+
+
+        <!-- ЗАЯВКИ -->
+
+        <button type="button"
+                class="menu-item"
+                onclick="openPage('/mini-app/applications/')">
+
+            <span class="menu-icon">
+                📋
+            </span>
+
+            <div class="menu-text">
+
+                <strong>
+                    Заявки
+                </strong>
+
+                <small>
+                    Просмотр заявок волонтёров
+                </small>
+
+            </div>
+
+            <span class="arrow">
+                ›
+            </span>
+
+        </button>
+
+
+        <!-- ВОЛОНТЁРЫ -->
+
+        <button type="button"
+                class="menu-item"
+                onclick="openPage('/mini-app/volunteers/')">
+
+            <span class="menu-icon">
+                👥
+            </span>
+
+            <div class="menu-text">
+
+                <strong>
+                    Волонтёры
+                </strong>
+
+                <small>
+                    Поиск и управление волонтёрами
+                </small>
+
+            </div>
+
+            <span class="arrow">
+                ›
+            </span>
+
+        </button>
+
+
+        <!-- СМЕНЫ -->
+
+        <button type="button"
+                class="menu-item"
+                onclick="openPage('/mini-app/shifts/')">
+
+            <span class="menu-icon">
+                🗓
+            </span>
+
+            <div class="menu-text">
+
+                <strong>
+                    Смены
+                </strong>
+
+                <small>
+                    Календарь и управление сменами
+                </small>
+
+            </div>
+
+            <span class="arrow">
+                ›
+            </span>
+
+        </button>
+
+
+        <!-- ЗОНЫ -->
+
+        <button type="button"
+                class="menu-item"
+                onclick="openPage('/mini-app/zones/')">
+
+            <span class="menu-icon">
+                📍
+            </span>
+
+            <div class="menu-text">
+
+                <strong>
+                    Зоны
+                </strong>
+
+                <small>
+                    Координаторы, смены и волонтёры
+                </small>
+
+            </div>
+
+            <span class="arrow">
+                ›
+            </span>
+
+        </button>
+
+
+        <!-- ПОСЕЩАЕМОСТЬ -->
+
+        <button type="button"
+                class="menu-item"
+                onclick="openPage('/mini-app/attendance/')">
+
+            <span class="menu-icon">
+                ✅
+            </span>
+
+            <div class="menu-text">
+
+                <strong>
+                    Посещаемость
+                </strong>
+
+                <small>
+                    Контроль присутствия волонтёров
+                </small>
+
+            </div>
+
+            <span class="arrow">
+                ›
+            </span>
+
+        </button>
+
+
+        <!-- ЧАСЫ -->
+
+        <button type="button"
+                class="menu-item"
+                onclick="openPage('/mini-app/hours/')">
+
+            <span class="menu-icon">
+                ⏱
+            </span>
+
+            <div class="menu-text">
+
+                <strong>
+                    Часы
+                </strong>
+
+                <small>
+                    Общее количество отработанных часов
+                </small>
+
+            </div>
+
+            <span class="arrow">
+                ›
+            </span>
+
+        </button>
+
+
+        <!-- РАССЫЛКА -->
+
+        <button type="button"
+                class="menu-item"
+                onclick="openPage('/mini-app/broadcast/')">
+
+            <span class="menu-icon">
+                📢
+            </span>
+
+            <div class="menu-text">
+
+                <strong>
+                    Рассылка
+                </strong>
+
+                <small>
+                    Отправить сообщение участникам смены
+                </small>
+
+            </div>
+
+            <span class="arrow">
+                ›
+            </span>
+
+        </button>
+
+
+        <!-- ПРОЕКТЫ -->
+
+        <button type="button"
+                class="menu-item"
+                onclick="openPage('/mini-app/projects/')">
+
+            <span class="menu-icon">
+                📁
+            </span>
+
+            <div class="menu-text">
+
+                <strong>
+                    Проекты
+                </strong>
+
+                <small>
+                    Управление проектами
+                </small>
+
+            </div>
+
+            <span class="arrow">
+                ›
+            </span>
+
+        </button>
+
+
+    </section>
+
+
+    <div class="bottom-space"></div>
+
+</div>
+
+
+<!-- JAVASCRIPT -->
+<script src="{% static 'volunteers/js/app.js' %}"></script>
+
+
+<script>
+
+const tg = window.Telegram.WebApp;
+
+tg.ready();
+tg.expand();
+
+function openPage(url) {
+    window.location.href = url;
+}
+
+</script>
+
+</body>
+
+</html>

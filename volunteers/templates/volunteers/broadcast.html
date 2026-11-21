@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Рассылка</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .back {
+            display: inline-block;
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .title {
+            font-size: 30px;
+            font-weight: 700;
+            margin: 0 0 8px;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .field {
+            margin-bottom: 22px;
+        }
+
+        select,
+        textarea {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: Arial, sans-serif;
+            outline: none;
+        }
+
+        select:focus,
+        textarea:focus {
+            border-color: #2563eb;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .hint {
+            margin-top: 7px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .button {
+            width: 100%;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #1d4ed8;
+        }
+
+        .message {
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            background: #eff6ff;
+            color: #1e40af;
+        }
+
+        .warning {
+            background: #fff7ed;
+            color: #9a3412;
+        }
+
+        .success {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .danger {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .info-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header,
+            .form-card {
+                padding: 22px;
+            }
+
+            .title {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="/mini-app/" class="back">
+        ← Назад
+    </a>
+
+
+    <div class="header">
+
+        <h1 class="title">
+            📢 Рассылка
+        </h1>
+
+        <div class="subtitle">
+            Отправка сообщения всем волонтёрам, назначенным на выбранную смену.
+        </div>
+
+    </div>
+
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="message
+                {% if message.tags == 'success' %}
+                    success
+                {% elif message.tags == 'warning' %}
+                    warning
+                {% elif message.tags == 'error' %}
+                    danger
+                {% endif %}
+            ">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <div class="form-card">
+
+        <form method="post">
+
+            {% csrf_token %}
+
+
+            <div class="field">
+
+                <label for="shift_id">
+                    Выберите смену
+                </label>
+
+                <select
+                    name="shift_id"
+                    id="shift_id"
+                    required
+                >
+
+                    <option value="">
+                        — Выберите смену —
+                    </option>
+
+                    {% for shift in shifts %}
+
+                        <option value="{{ shift.id }}">
+
+                            {{ shift.name }}
+                            — {{ shift.zone.name }}
+                            — {{ shift.start_time|date:"d.m.Y H:i" }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <div class="hint">
+                    Сообщение получат только волонтёры, назначенные на эту смену.
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="message">
+                    Сообщение
+                </label>
+
+                <textarea
+                    name="message"
+                    id="message"
+                    placeholder="Например: Завтра сбор волонтёров в 09:00 у главного входа."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <button type="submit" class="button">
+                📤 Отправить сообщение
+            </button>
+
+        </form>
+
+
+        <div class="info-box">
+            💡 Перед отправкой проверьте смену и текст сообщения.
+            Сообщение будет отправлено через Telegram только тем волонтёрам,
+            у которых сохранён Telegram ID.
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

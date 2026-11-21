@@ -1,0 +1,262 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0,
+                   maximum-scale=1.0">
+
+    <title>Смены</title>
+
+    <link rel="stylesheet"
+          href="{% static 'volunteers/css/style.css' %}">
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <button type="button"
+                onclick="history.back()"
+                class="back-button">
+            ←
+        </button>
+
+        <div>
+
+            <p class="small-text">
+                Расписание
+            </p>
+
+            <h1>
+                Смены
+            </h1>
+
+        </div>
+
+    </header>
+
+
+    <!-- MONTH NAVIGATION -->
+
+    <div class="month-navigation">
+
+        <a href="?month={{ previous_month }}"
+           class="month-button">
+            ←
+        </a>
+
+
+        <div class="month-title">
+
+            {{ month_label }}
+
+        </div>
+
+
+        <a href="?month={{ next_month }}"
+           class="month-button">
+            →
+        </a>
+
+    </div>
+
+
+    <!-- CALENDAR -->
+
+    <section class="calendar-card">
+
+        <div class="calendar-week">
+
+            <div>Пн</div>
+            <div>Вт</div>
+            <div>Ср</div>
+            <div>Чт</div>
+            <div>Пт</div>
+            <div>Сб</div>
+            <div>Вс</div>
+
+        </div>
+
+
+        <div class="calendar-grid">
+
+            {% for week in calendar_rows %}
+
+                {% for day in week %}
+
+                    {% if day.date %}
+
+                    <div class="calendar-day">
+
+                        <div class="day-number">
+                            {{ day.day }}
+                        </div>
+
+
+                        {% if day.shifts %}
+
+                            {% for shift in day.shifts %}
+
+                            <div class="calendar-shift"
+                                 onclick="openPage('/mini-app/shifts/{{ shift.id }}/')">
+
+                                <span>
+                                    {{ shift.name }}
+                                </span>
+
+                                <small>
+                                    {{ shift.start_time|date:"H:i" }}
+                                </small>
+
+                            </div>
+
+                            {% endfor %}
+
+                        {% endif %}
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="calendar-day empty-day"></div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- ALL SHIFTS -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2>
+                📋 Все смены
+            </h2>
+
+            <span class="counter">
+                {{ shifts|length }}
+            </span>
+
+        </div>
+
+
+        {% if shifts %}
+
+            {% for shift in shifts %}
+
+            <div class="shift-card"
+                 onclick="openPage('/mini-app/shifts/{{ shift.id }}/')">
+
+                <div class="shift-main">
+
+                    <h3>
+                        {{ shift.name }}
+                    </h3>
+
+                    <p>
+                        📍 {{ shift.zone.name }}
+                    </p>
+
+                    <p>
+                        🗓 {{ shift.start_time|date:"d.m.Y" }}
+                    </p>
+
+                    <p>
+                        🕐 {{ shift.start_time|date:"H:i" }}
+                        —
+                        {{ shift.end_time|date:"H:i" }}
+                    </p>
+
+                    {% if shift.description %}
+
+                    <p class="shift-description">
+                        {{ shift.description }}
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="shift-arrow">
+                    →
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    🗓
+                </div>
+
+                <h3>
+                    Смен пока нет
+                </h3>
+
+                <p>
+                    Создайте первую смену через кнопку ниже.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- CREATE BUTTON -->
+
+    <button class="floating-button"
+            onclick="openPage('/mini-app/shifts/create/')">
+        + Создать смену
+    </button>
+
+
+    <div class="bottom-space"></div>
+
+</div>
+
+
+<script>
+
+const tg = window.Telegram.WebApp;
+
+tg.ready();
+tg.expand();
+
+
+function openPage(url) {
+    window.location.href = url;
+}
+
+</script>
+
+</body>
+
+</html>

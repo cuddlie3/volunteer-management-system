@@ -1,0 +1,204 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0,
+                   maximum-scale=1.0">
+
+    <title>Волонтёры</title>
+
+    <link rel="stylesheet"
+          href="{% static 'volunteers/css/style.css' %}">
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <button type="button"
+                onclick="history.back()"
+                class="back-button">
+            ←
+        </button>
+
+        <div>
+
+            <p class="small-text">
+                Управление
+            </p>
+
+            <h1>
+                Волонтёры
+            </h1>
+
+        </div>
+
+    </header>
+
+
+    <!-- SEARCH -->
+
+    <form method="get"
+          class="search-form">
+
+        <input
+            type="text"
+            name="q"
+            value="{{ query }}"
+            placeholder="🔎 Поиск по ФИО или телефону"
+            class="search-input">
+
+        <select name="zone"
+                class="search-input">
+
+            <option value="">
+                Все зоны
+            </option>
+
+            {% for zone in zones %}
+
+                <option value="{{ zone.id }}"
+                    {% if selected_zone == zone.id|stringformat:"s" %}
+                        selected
+                    {% endif %}>
+                    {{ zone.name }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <button type="submit"
+                class="primary-button">
+            Найти
+        </button>
+
+    </form>
+
+
+    <!-- RESULT -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2>
+                👥 Волонтёры
+            </h2>
+
+            <span class="counter">
+                {{ volunteers|length }}
+            </span>
+
+        </div>
+
+
+        {% if volunteers %}
+
+            {% for volunteer in volunteers %}
+
+            <div class="card"
+                 onclick="openPage('/mini-app/volunteers/{{ volunteer.id }}/')">
+
+                <div class="avatar">
+                    {{ volunteer.full_name|first|upper }}
+                </div>
+
+
+                <div class="card-content">
+
+                    <strong>
+                        {{ volunteer.full_name }}
+                    </strong>
+
+
+                    {% if volunteer.phone %}
+
+                    <p>
+                        📞 {{ volunteer.phone }}
+                    </p>
+
+                    {% endif %}
+
+
+                    {% if volunteer.study_place %}
+
+                    <p>
+                        🎓 {{ volunteer.study_place }}
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="arrow">
+                    →
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    👥
+                </div>
+
+                <h3>
+                    Волонтёры не найдены
+                </h3>
+
+                <p>
+                    Попробуйте изменить поисковый запрос
+                    или выбрать другую зону.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <div class="bottom-space"></div>
+
+</div>
+
+
+<script>
+
+const tg = window.Telegram.WebApp;
+
+tg.ready();
+tg.expand();
+
+
+function openPage(url) {
+    window.location.href = url;
+}
+
+</script>
+
+
+</body>
+
+</html>

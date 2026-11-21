@@ -1,0 +1,212 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0,
+                   maximum-scale=1.0">
+
+    <title>{{ zone.name }}</title>
+
+    <link rel="stylesheet"
+          href="{% static 'volunteers/css/style.css' %}">
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <button type="button"
+                onclick="history.back()"
+                class="back-button">
+            ←
+        </button>
+
+        <div>
+            <p class="small-text">
+                Зона
+            </p>
+
+            <h1>
+                {{ zone.name }}
+            </h1>
+        </div>
+
+    </header>
+
+
+    <!-- INFO -->
+
+    <section class="profile-card">
+
+        <div class="profile-icon">
+            📍
+        </div>
+
+        <div>
+
+            <p class="profile-name">
+                {{ zone.name }}
+            </p>
+
+            <p class="profile-role">
+                Координатор:
+                {{ zone.coordinator.get_full_name|default:zone.coordinator.username }}
+            </p>
+
+        </div>
+
+    </section>
+
+
+    {% if zone.description %}
+
+    <div class="info-box">
+
+        <strong>
+            Описание
+        </strong>
+
+        <p>
+            {{ zone.description }}
+        </p>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- SHIFTS -->
+
+    <section class="section">
+
+        <h2>
+            🗓 Смены
+        </h2>
+
+        {% if zone_shifts %}
+
+            {% for shift in zone_shifts %}
+
+            <div class="card"
+                 onclick="openPage('/mini-app/shifts/{{ shift.id }}/')">
+
+                <div>
+
+                    <strong>
+                        {{ shift.name }}
+                    </strong>
+
+                    <p>
+                        {{ shift.start_time|date:"d.m.Y H:i" }}
+                        —
+                        {{ shift.end_time|date:"H:i" }}
+                    </p>
+
+                </div>
+
+                <span>
+                    →
+                </span>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-state">
+                Смен в этой зоне пока нет.
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- VOLUNTEERS -->
+
+    <section class="section">
+
+        <h2>
+            👥 Волонтёры
+        </h2>
+
+
+        {% if zone_volunteers %}
+
+            {% for volunteer in zone_volunteers %}
+
+            <div class="card"
+                 onclick="openPage('/mini-app/volunteers/{{ volunteer.id }}/')">
+
+                <div>
+
+                    <strong>
+                        {{ volunteer.full_name }}
+                    </strong>
+
+                    {% if volunteer.phone %}
+
+                    <p>
+                        📞 {{ volunteer.phone }}
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+                <span>
+                    →
+                </span>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-state">
+                В этой зоне пока нет назначенных волонтёров.
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <div class="bottom-space"></div>
+
+</div>
+
+
+<script>
+
+const tg = window.Telegram.WebApp;
+
+tg.ready();
+tg.expand();
+
+
+function openPage(url) {
+    window.location.href = url;
+}
+
+</script>
+
+
+</body>
+
+</html>

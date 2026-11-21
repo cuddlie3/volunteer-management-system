@@ -1,0 +1,221 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    >
+
+    <title>Проекты</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'volunteers/css/style.css' %}"
+    >
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+
+<body>
+
+<div class="app">
+
+    <!-- Шапка -->
+    <header class="page-header">
+
+        <button
+            class="back-button"
+            onclick="goBack()"
+        >
+            ←
+        </button>
+
+        <div>
+            <p class="small-text">
+                Volunteer Management
+            </p>
+
+            <h1>
+                📁 Проекты
+            </h1>
+        </div>
+
+    </header>
+
+
+    <!-- Разделы проекта -->
+    <section class="menu">
+
+        <h2>
+            Отчёты
+        </h2>
+
+
+        <!-- Волонтёры -->
+        <button
+            class="menu-item"
+            onclick="openPage('/mini-app/volunteers/')"
+        >
+
+            <span>
+                👥
+            </span>
+
+            <div>
+                <strong>
+                    Волонтёры
+                </strong>
+
+                <small>
+                    Список и информация о волонтёрах
+                </small>
+            </div>
+
+            <span class="arrow">
+                ›
+            </span>
+
+        </button>
+
+
+        <!-- Смены -->
+        <button
+            class="menu-item"
+            onclick="openPage('/mini-app/shifts/')"
+        >
+
+            <span>
+                📅
+            </span>
+
+            <div>
+                <strong>
+                    Смены
+                </strong>
+
+                <small>
+                    Смены и распределение волонтёров
+                </small>
+            </div>
+
+            <span class="arrow">
+                ›
+            </span>
+
+        </button>
+
+
+        <!-- Зоны -->
+        <button
+            class="menu-item"
+            onclick="openPage('/mini-app/zones/')"
+        >
+
+            <span>
+                📍
+            </span>
+
+            <div>
+                <strong>
+                    Зоны
+                </strong>
+
+                <small>
+                    Информация по зонам
+                </small>
+            </div>
+
+            <span class="arrow">
+                ›
+            </span>
+
+        </button>
+
+
+        <!-- Посещаемость -->
+        <button
+            class="menu-item"
+            onclick="openPage('/mini-app/attendance/')"
+        >
+
+            <span>
+                🟢
+            </span>
+
+            <div>
+                <strong>
+                    Посещаемость
+                </strong>
+
+                <small>
+                    Приход и уход волонтёров
+                </small>
+            </div>
+
+            <span class="arrow">
+                ›
+            </span>
+
+        </button>
+
+
+        <!-- Часы -->
+        <button
+            class="menu-item"
+            onclick="openPage('/mini-app/hours/')"
+        >
+
+            <span>
+                ⏱
+            </span>
+
+            <div>
+                <strong>
+                    Часы
+                </strong>
+
+                <small>
+                    Отработанное время волонтёров
+                </small>
+            </div>
+
+            <span class="arrow">
+                ›
+            </span>
+
+        </button>
+
+    </section>
+
+
+    <div class="bottom-space"></div>
+
+</div>
+
+
+<script src="{% static 'volunteers/js/app.js' %}"></script>
+
+
+<script>
+
+const tg = window.Telegram.WebApp;
+
+tg.ready();
+tg.expand();
+
+
+function goBack() {
+    window.location.href = "/mini-app/";
+}
+
+</script>
+
+</body>
+
+</html>

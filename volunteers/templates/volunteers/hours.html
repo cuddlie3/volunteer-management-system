@@ -1,0 +1,74 @@
+{% extends "volunteers/base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1>⏱ Часы волонтёров</h1>
+        <p>Общее время работы каждого волонтёра</p>
+    </div>
+
+    <a href="/mini-app/" class="back-button">
+        ← Назад
+    </a>
+</div>
+
+
+<div class="card">
+
+    {% if volunteer_hours %}
+
+    <div class="table-wrapper">
+
+        <table class="data-table">
+
+            <thead>
+                <tr>
+                    <th>Волонтёр</th>
+                    <th>Отработано</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for item in volunteer_hours %}
+
+                <tr>
+
+                    <td>
+                        <a href="/mini-app/volunteers/{{ item.volunteer.id }}/">
+                            <strong>
+                                {{ item.volunteer.full_name }}
+                            </strong>
+                        </a>
+                    </td>
+
+                    <td>
+                        <span class="hours-badge">
+                            {{ item.hours }} ч {{ item.minutes }} мин
+                        </span>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+        <div class="empty-state">
+            <div class="empty-icon">⏱</div>
+            <h3>Данных пока нет</h3>
+            <p>У волонтёров ещё нет отработанных часов.</p>
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

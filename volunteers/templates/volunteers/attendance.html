@@ -1,0 +1,415 @@
+```html
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Посещаемость</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-top: 8px;
+        }
+
+        .back {
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8fafc;
+            text-align: left;
+            padding: 16px;
+            font-size: 14px;
+            color: #6b7280;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 17px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .volunteer-name {
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .shift-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .zone {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .date {
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .present {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .absent {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .time {
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .notes {
+            color: #6b7280;
+            font-size: 14px;
+            max-width: 220px;
+        }
+
+        .empty {
+            background: white;
+            border-radius: 18px;
+            padding: 50px 20px;
+            text-align: center;
+            color: #6b7280;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 800px) {
+
+            .container {
+                padding: 20px 12px;
+            }
+
+            .header {
+                align-items: flex-start;
+            }
+
+            .title {
+                font-size: 26px;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 850px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <div class="header">
+
+        <div>
+
+            <h1 class="title">
+                🟢 Посещаемость
+            </h1>
+
+            <div class="subtitle">
+                Посещение смен волонтёрами
+            </div>
+
+        </div>
+
+
+        <a href="/mini-app/" class="back">
+            ← Назад
+        </a>
+
+    </div>
+
+
+    {% if attendances %}
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Волонтёр
+                        </th>
+
+                        <th>
+                            Смена
+                        </th>
+
+                        <th>
+                            Зона
+                        </th>
+
+                        <th>
+                            Дата
+                        </th>
+
+                        <th>
+                            Статус
+                        </th>
+
+                        <th>
+                            Время
+                        </th>
+
+                        <th>
+                            Примечания
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for attendance in attendances %}
+
+                    <tr>
+
+                        <td>
+
+                            <div class="volunteer-name">
+                                {{ attendance.assignment.volunteer.full_name }}
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="shift-name">
+                                {{ attendance.assignment.shift.name }}
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="zone">
+                                📍 {{ attendance.assignment.shift.zone.name }}
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="date">
+                                {{ attendance.assignment.shift.start_time|date:"d.m.Y" }}
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            {% if attendance.attended %}
+
+                                <span class="status present">
+                                    ✓ Присутствовал
+                                </span>
+
+                            {% elif attendance.check_in %}
+
+                                <span class="status present">
+                                    ✓ Пришёл
+                                </span>
+
+                            {% else %}
+
+                                <span class="status pending">
+                                    Ожидается
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="time">
+
+                                {% if attendance.check_in %}
+
+                                    <div>
+                                        🟢 Приход:
+                                        {{ attendance.check_in|date:"H:i" }}
+                                    </div>
+
+                                {% endif %}
+
+
+                                {% if attendance.check_out %}
+
+                                    <div>
+                                        🔴 Уход:
+                                        {{ attendance.check_out|date:"H:i" }}
+                                    </div>
+
+                                {% endif %}
+
+
+                                {% if not attendance.check_in and not attendance.check_out %}
+
+                                    <span style="color:#9ca3af;">
+                                        —
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            {% if attendance.notes %}
+
+                                <div class="notes">
+                                    {{ attendance.notes }}
+                                </div>
+
+                            {% else %}
+
+                                <span style="color:#9ca3af;">
+                                    —
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    {% else %}
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                🟢
+            </div>
+
+            <div style="font-size:20px; font-weight:700; margin-bottom:8px;">
+                Посещаемость пока отсутствует
+            </div>
+
+            <div>
+                Когда волонтёры будут назначены на смены,
+                информация появится здесь.
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+</div>
+
+</body>
+
+</html>
+```
